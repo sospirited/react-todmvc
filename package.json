@@ -23,7 +23,8 @@
     "test:node": "mocha --compilers js:babel/register localStorage.js test/**/*.jsx",
     "test:node:watch": "mocha --compilers js:babel/register localStorage.js test/**/*.jsx -w",
     "test:browser": "karma start",
-    "test:browser:debug": "karma start karma-debug.conf.js"
+    "test:browser:debug": "karma start karma-debug.conf.js",
+    "test:saucelabs": "envcheck SAUCE_ACCESS_KEY && karma start karma-saucelabs.conf.js"
   },
   "dependencies": {
     "classnames": "^2.1.5",
@@ -37,6 +38,7 @@
     "babel": "^5.8.23",
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
+    "env-check": "^0.0.1",
     "eslint": "^1.6.0",
     "http-server": "^0.8.5",
     "karma": "^0.13.10",
@@ -46,6 +48,7 @@
     "karma-cli": "^0.1.1",
     "karma-firefox-launcher": "^0.1.6",
     "karma-mocha": "^0.2.0",
+    "karma-sauce-launcher": "^0.2.14",
     "localStorage": "^1.0.3",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.3",
