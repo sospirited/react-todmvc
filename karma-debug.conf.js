@@ -7,6 +7,7 @@ module.exports = function(config) {
 		browsers: ['Chrome'],
 		singleRun: false,
 		autoWatch: true,
-		colors: true
+		reporters: ['dots'],
+		colors: false
 	});
 };
