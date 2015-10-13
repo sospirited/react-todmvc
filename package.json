@@ -19,7 +19,7 @@
     "start": "http-server & watch-run -p 'src/**' npm run build",
     "pretest": "npm run pretest:lint",
     "pretest:lint": "eslint src test --ext=jsx --ext=js",
-    "test": "npm run test:node && npm run test:browser",
+    "test": "npm run test:browser",
     "test:node": "mocha --compilers js:babel/register localStorage.js test/**/*.jsx",
     "test:node:watch": "mocha --compilers js:babel/register localStorage.js test/**/*.jsx -w",
     "test:browser": "karma start",
@@ -44,7 +44,7 @@
     "http-server": "^0.8.5",
     "karma": "^0.13.10",
     "karma-browserify": "^4.4.0",
-    "karma-chai": "~0.1.0",
+
     "karma-chrome-launcher": "^0.2.1",
     "karma-ie-launcher": "0.2.0",
     "karma-cli": "^0.1.1",

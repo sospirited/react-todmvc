@@ -12,7 +12,7 @@ var Container = require('../src/Container.jsx');
 var TodoHeader = require('../src/TodoHeader.jsx');
 var TodoModel = require('../src/TodoModel.js');
 var ReactDOM = require('react-dom');
-require('chai');
+var expect = require('chai').expect;
 
 
 describe('TodoMVC App', function() {
@@ -22,21 +22,24 @@ describe('TodoMVC App', function() {
 		localStorage.clear();
 	});
 
-
-	it('only renders a header when there are no items in the list', function() {
-		 //Given
+	//for(var x = 0; x < 10000; x++) {
+	it('only renders a header when there are no items in the list', function () {
+		//Given
 		renderer.render(<TodoApp model={new TodoModel()}/>);
 
 		// Then
 		expect(renderer, 'to have rendered',
-		  <Container componentName="TodoApp">
-			<TodoHeader/>
-		  </Container>
+			<Container componentName="TodoApp">
+				<TodoHeader/>
+			</Container>
 		);
 	});
+	//}
+
 
 	// model test
-	it('Updates TodoItem when user enters a value via Model', function() {
+	//for(var x = 0; x < 10000; x++) {
+	it('Updates TodoItem when user enters a value via Model', function () {
 		//Given
 		this.component = TestUtils.renderIntoDocument(<TodoApp model={ new TodoModel() }/>);
 
@@ -47,9 +50,12 @@ describe('TodoMVC App', function() {
 		expect(this.component.props.model.todos.length).equals(1);
 		expect(this.component.props.model.todos[0].title).equals('abcdefg');
 	});
+	//}
 
 
-	it('Updates TodoItem with Simulated events', function() {
+	// Hybrid model/view
+	//for(var x = 0; x < 10000; x++) {
+	it('Updates TodoItem with Simulated events', function () {
 		//Given
 		this.component = TestUtils.renderIntoDocument(<TodoApp model={ new TodoModel() }/>);
 		this.renderedDOM = ReactDOM.findDOMNode(this.component);
@@ -64,6 +70,7 @@ describe('TodoMVC App', function() {
 		//Then
 		expect(this.component.props.model.todos[0].title).equals('ABCDEF');
 	});
+	//}
 
 
 
