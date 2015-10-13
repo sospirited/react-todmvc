@@ -59,7 +59,7 @@ describe('TodoMVC App', function() {
 		var inputDOM = this.renderedDOM.querySelector('.new-todo');
 		inputDOM.value = 'ABCDEF';
 		TestUtils.Simulate.change(inputDOM);
-		TestUtils.Simulate.keyDown(inputDOM, {key: "Enter", keyCode: 13, which: 13});
+		TestUtils.Simulate.keyDown(inputDOM, {key: 'Enter', keyCode: 13, which: 13});
 
 		//Then
 		expect(this.component.props.model.todos[0].title).equals('ABCDEF');
