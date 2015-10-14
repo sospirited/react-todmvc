@@ -19,9 +19,11 @@
     "start": "http-server & watch-run -p 'src/**' npm run build",
     "pretest": "npm run pretest:lint",
     "pretest:lint": "eslint src test --ext=jsx --ext=js",
-    "test": "npm run test:browser",
-    "test:node": "mocha --compilers js:babel/register localStorage.js test/**/*.jsx",
-    "test:node:watch": "mocha --compilers js:babel/register localStorage.js test/**/*.jsx -w",
+    "test": "npm run test:node && npm run test:browser",
+    "test:node": "mocha --compilers js:babel/register jsdom.js localStorage.js test/**/*.jsx",
+    "test:node:watch": "mocha --compilers js:babel/register jsdom.js localStorage.js test/**/*.jsx -w",
+    "test:node:debug": "mocha --compilers js:babel/register jsdom.js localStorage.js test/**/*.jsx --debug-brk",
+    "test:node:debugger": "node-inspector --web-port=9090",
     "test:browser": "karma start",
     "test:browser:debug": "karma start karma-debug.conf.js",
     "test:saucelabs": "envcheck SAUCE_ACCESS_KEY && karma start karma-saucelabs.conf.js --no-colors"
@@ -42,6 +44,7 @@
     "env-check": "^0.0.1",
     "eslint": "^1.6.0",
     "http-server": "^0.8.5",
+    "jsdom": "^6.5.1",
     "karma": "^0.13.10",
     "karma-browserify": "^4.4.0",
 
@@ -56,9 +59,11 @@
     "localStorage": "^1.0.3",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.3",
+    "node-inspector": "^0.12.3",
     "react-addons-test-utils": "^0.14.0",
+    "teaspoon": "^5.0.0",
     "unexpected": "^10.0.1",
-    "unexpected-react-shallow": "^0.6.1",
+    "unexpected-react-shallow": "^0.6.2",
     "watch-run": "^1.2.2"
   }
 }

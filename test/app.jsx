@@ -1,77 +1,125 @@
 'use strict';
 
+var $ = require('teaspoon');
 var unexpected = require('unexpected');
 var unexpectedReactShallow = require('unexpected-react-shallow');
-
+var expect = unexpected.clone().installPlugin(unexpectedReactShallow);
 var React = require('react');
 var ReactTestUtils = require('react-addons-test-utils');
 var renderer = ReactTestUtils.createRenderer();
-var TestUtils = React.addons.TestUtils;
 var TodoApp = require('../src/TodoApp.jsx');
 var Container = require('../src/Container.jsx');
 var TodoHeader = require('../src/TodoHeader.jsx');
+var TodoItems = require('../src/TodoItems.jsx');
+var TodoItem = require('../src/TodoItem.jsx');
+var TodoFooter = require('../src/TodoFooter.jsx');
 var TodoModel = require('../src/TodoModel.js');
-var ReactDOM = require('react-dom');
-var expect = require('chai').expect;
 
 
 describe('TodoMVC App', function() {
+	var model;
 
 	beforeEach(function() {
-		this.timeout(60000);
 		localStorage.clear();
 	});
 
-	//for(var x = 0; x < 10000; x++) {
-	it('only renders a header when there are no items in the list', function () {
-		//Given
-		renderer.render(<TodoApp model={new TodoModel()}/>);
+	describe('when the Todo list start off empty', function() {
+		beforeEach(function() {
+			model = new TodoModel();
+		});
 
-		// Then
-		expect(renderer, 'to have rendered',
-			<Container componentName="TodoApp">
-				<TodoHeader/>
-			</Container>
-		);
+		it('only renders a header when there are no items in the list', function() {
+			// given
+			renderer.render(<TodoApp model={model}/>);
+
+			// then
+			// TODO: upgrade to 'with all children' once <https://github.com/bruderstein/unexpected-react-shallow/issues/8> is resolved
+			expect(renderer, 'to have rendered',
+				<Container componentName="TodoApp">
+					<TodoHeader/>
+				</Container>
+			);
+		});
+
+		it('allows an item to be added to the list', function() {
+			// given
+			var todoApp = <TodoApp model={model}/>;
+
+			// when
+			var inputBox = $(todoApp).render().find('input.new-todo').dom();
+			inputBox.value = 'Stuff';
+			ReactTestUtils.Simulate.keyDown(inputBox, {key: 'Enter', keyCode: 13, which: 13});
+
+			// then
+			renderer.render(todoApp);
+			expect(renderer, 'to have rendered with all children',
+				<Container componentName="TodoApp">
+					<TodoHeader/>
+					<TodoItems activeTodoCount={1}>
+						<TodoItem title="Stuff" completed={false}/>
+					</TodoItems>
+					<TodoFooter count={1} completedCount={0} nowShowing="all"/>
+				</Container>
+			);
+		});
+	})
+
+	describe('when the Todo list starts off with a single active item', function() {
+		beforeEach(function() {
+			model = new TodoModel();
+			model.addTodo('Stuff');
+		});
+
+		it('updates the summary information when an items checkbox is ticked', function() {
+			// given
+			var todoApp = <TodoApp model={model}/>;
+
+			// when
+			var checkbox = $(todoApp).render().find('.todo-list .toggle').dom();
+			ReactTestUtils.Simulate.change(checkbox, {'target': {'checked': true}});
+
+			// then
+			renderer.render(todoApp);
+			expect(renderer, 'to contain',
+				<TodoFooter count={0} completedCount={1} nowShowing="all"/>
+			);
+		});
+
+		it('removes the items list and footer when the last item is removed', function() {
+			// given
+			var todoApp = <TodoApp model={model}/>;
+
+			// when
+			var destroyButton = $(todoApp).render().find('.destroy').dom();
+			ReactTestUtils.Simulate.click(destroyButton);
+
+			// then
+			renderer.render(todoApp);
+			// TODO: upgrade to 'with all children' once <https://github.com/bruderstein/unexpected-react-shallow/issues/8> is resolved
+			expect(renderer, 'to have rendered',
+				<Container componentName="TodoApp">
+					<TodoHeader/>
+				</Container>
+			);
+		});
+
+		//failing - item is still displayed
+		xit('hides active items when the completed filter is clicked', function() {
+			// given
+			var todoApp = <TodoApp model={model}/>;
+
+			// when
+			var completedFilter = $(todoApp).find('a[href="#/completed"]').dom();
+			ReactTestUtils.Simulate.click(completedFilter);
+
+			// then
+			renderer.render(todoApp);
+			expect(renderer, 'to have rendered with all children',
+				<Container componentName="TodoApp">
+					<TodoHeader/>
+					<TodoFooter count={1} completedCount={0} nowShowing="completed"/>
+				</Container>
+			);
+		});
 	});
-	//}
-
-
-	// model test
-	//for(var x = 0; x < 10000; x++) {
-	it('Updates TodoItem when user enters a value via Model', function () {
-		//Given
-		this.component = TestUtils.renderIntoDocument(<TodoApp model={ new TodoModel() }/>);
-
-		//When
-		this.component.addTodo('abcdefg');
-
-		//Then
-		expect(this.component.props.model.todos.length).equals(1);
-		expect(this.component.props.model.todos[0].title).equals('abcdefg');
-	});
-	//}
-
-
-	// Hybrid model/view
-	//for(var x = 0; x < 10000; x++) {
-	it('Updates TodoItem with Simulated events', function () {
-		//Given
-		this.component = TestUtils.renderIntoDocument(<TodoApp model={ new TodoModel() }/>);
-		this.renderedDOM = ReactDOM.findDOMNode(this.component);
-
-
-		//When
-		var inputDOM = this.renderedDOM.querySelector('.new-todo');
-		inputDOM.value = 'ABCDEF';
-		TestUtils.Simulate.change(inputDOM);
-		TestUtils.Simulate.keyDown(inputDOM, {key: 'Enter', keyCode: 13, which: 13});
-
-		//Then
-		expect(this.component.props.model.todos[0].title).equals('ABCDEF');
-	});
-	//}
-
-
-
 });
