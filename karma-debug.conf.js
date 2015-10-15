@@ -4,7 +4,7 @@ module.exports = function(config) {
 	baseConfigurator(config);
 
 	config.set({
-		browsers: ['Chrome'],
+		browsers: ['Firefox'],
 		singleRun: false,
 		autoWatch: true,
 		reporters: ['dots'],
